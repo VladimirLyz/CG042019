@@ -4,6 +4,7 @@
     {
         session_start();
     }
+    include_once('verdicts.php');
     if(!isset($_SESSION['order_id'])||!isset($_POST['user_id'])||!isset($_POST['mark'])){
         fail("Incorrect post request.");
     }
