@@ -21,6 +21,7 @@ class Subscription
         {
             fail('Bad login.');
         }
+        Order::UpdateOrderWithId($_order_id, Order::CreateNew($order->client->id, $order->text, $order->cost, $_courier_id));
 
     }
 
@@ -38,5 +39,30 @@ class Subscription
         }
         $database->closeConnection();
         return $subscriptions_id;
+    }    
+
+    static function AddSubscription($order_id)
+    {
+        if (session_status() == PHP_SESSION_NONE) 
+        {
+            session_start();
+        }
+        if (!isset($_SESSION['id']))
+        {
+            fail('Bad login.');
+        }
+        $database = new Database();
+        $conn = $database->getConnection();
+        $sql = "SELECT * FROM `orders` WHERE `order_id`=$_order_id";
+        $result = mysqli_query($conn, $sql) or fail(mysqli_error($conn));
+        $count = mysqli_num_rows($result);
+        if($count!=1){
+            fail('Can not find order in database.');
+        }
+        $courier_id = $_SESSION["id"];
+        $sql = "INSERT INTO `subscriptions`(`order_id`, `courier_id`) VALUES (`$_order_id`,`$courier_id`)";
+        if($conn->quiry(sql)==false){
+            fail('Can not add subscribtion in database.');
+        }
     }
 }

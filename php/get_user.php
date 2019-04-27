@@ -4,7 +4,10 @@
             include_once("database.php");
             $database = new Database();
             $conn = $database->getConnection();
-            session_start();
+            if (session_status() == PHP_SESSION_NONE) 
+            {
+                session_start();
+            }
             /*if (isset($_SESSION['username'])) {
                 $username = $_SESSION['username'];
             }*/

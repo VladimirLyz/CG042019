@@ -31,14 +31,14 @@
             case 'register':
                 include_once('php/add_user.php');
                 break;
-            case 'makeorder':
-                include_once('php/add_order.php');
-                break;
             case 'getallorders':
                 include_once('php/get_orders.php');
                 break;
             case 'logout':
                 include_once('php/logout.php');
+                break;
+            case 'addorder':
+                include_once('php/add_order.php');
                 break;
         }
     }

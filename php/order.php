@@ -14,7 +14,9 @@ class Order
         
     }
 
-    static function CreateNew($client_id, $text, $cost)
+
+
+    static function CreateNew($client_id, $text, $cost, $courier = null, $completed = 0)
     {
         include_once('verdicts.php');
         $res = new Order();
@@ -34,6 +36,8 @@ class Order
         $res->client = new Client($client_id);
         $res->text = $text;
         $res->cost = $cost;
+        $res->courier = $courier;
+        $res->completed = $completed;
         return $res;
     }
 
@@ -96,6 +100,8 @@ class Order
         $database->closeConnection();
     }
 
+   
+
     static function GetById($_id)
     {
         include_once('verdicts.php');
@@ -118,7 +124,7 @@ class Order
         $res->id = $_id;
         if ($info['courier_id'] != null)
         {
-            $courier = Order::GetCoutier($_id); 
+            $res->courier = new Courier($info['courier_id']); 
         }
         $database->closeConnection();
         return $res;
@@ -145,5 +151,9 @@ class Order
         $sql = "UPDATE `orders` SET `id`=$new_order->id,`text`=$new_order->text,`client_id`=" 
             . $new_order->client->id . ",`cost`=$new_order->cost,`completed`=$new_order->completed,
             `courier_id`=$new_order->courier_id WHERE `id`=$order_id";
+        $conn = $database->getConnection();
+        if($conn->query($sql)==FALSE){
+            fail("Can not update order info.");
+        }
     }
 }
