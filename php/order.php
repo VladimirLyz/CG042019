@@ -14,7 +14,25 @@ class Order
         
     }
 
-
+    static function HaveOrder($user_id)
+    {
+        include_once('verdicts.php');
+        $database = new Database();
+        $conn = $database->getConnection();
+        $sql = "SELECT * FROM `orders` WHERE `client_id`=$user_id AND `completed`=0";
+        $result = mysqli_query($conn, $sql) or fail(mysqli_error($conn));
+        $count = mysqli_num_rows($result);
+        if($count==0){
+            ok_message(0);
+        }
+        else if($count==1){
+            $info = mysqli_fetch_assoc($result);
+            ok(info['id']);
+        }
+        else {
+            fail('Too many orders for this user');
+        }
+    }
 
     static function CreateNew($client_id, $text, $cost, $courier = null, $completed = 0)
     {
@@ -93,7 +111,7 @@ class Order
             fail("Can not find user in database.");
         }
         else {
-           ok();
+            ok_message(array('order_id' => $info['id']));
             $info = mysqli_fetch_assoc($result);
             $_SESSION['order_id'] = $info['id'];
         }

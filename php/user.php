@@ -14,6 +14,11 @@ abstract class User{
             fail('Bad login.');
         }
     }
+    abstract public function GetInfo($id){
+        if(!isset($_SESSION['id'])){
+            fail('Bad login.');
+        }
+    }
     static public function UpdateUser($info){
         $database = new Database(); 
         $conn = $database->getConnection();
@@ -68,6 +73,12 @@ class Client extends User{
         $info['client_rate']=($rating+$new_mark)/($info['client_voted']);
         parent::UpdateUser($info);
     }
+    public function GetInfo($id)
+    {
+        $this = Client($id);
+        parent::GetInfo($id);
+        return array('username'=>$this->username, 'rating'=>$this->rating);
+    }
 }
 class Courier extends User{
     public function __construct($_id){
@@ -101,6 +112,12 @@ class Courier extends User{
         $info['deliv_voted']=$info['client_voted']+1;
         $info['deliv_rate']=($rating+$new_mark)/($info['deliv_voted']);
         parent::UpdateUser($info);
+    }
+    public function GetInfo($id)
+    {
+        $this = Courier($id);
+        parent::GetInfo($id);
+        return array('username'=>$this->username, 'rating'=>$this->rating);
     }
 }
 
