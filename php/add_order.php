@@ -1,26 +1,23 @@
 <?php
-    include_once "database.php";
-    session_start();
-    echo $_SESSION['username'];
-    if (isset($_SESSION['username']) and isset($_POST["label"]) and isset($_POST["content"])) {
-        echo "After if";
-        $database = new Database();
-        $date = date('Y-m-d');
-        $time = date('H:i:s');
-        $conn = $database->getConnection();
-        $user = $_SESSION["username"];
-        $content =  $_POST["content"];
-        $label = $_POST["label"];
-        $sql = "INSERT INTO `posts` (`user`, `date`, `time`, `content`, `label`)
-    VALUES ('$user', '$date', '$time', '$content', '$label')";
-        if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-        echo "<br>" . $user . "<br>" . $date . " " . $time . "<br>" . $content;
-        $database->closeConnection();
+    
+    if (session_status() == PHP_SESSION_NONE) 
+    {
+        session_start();
     }
-    header('Location: ../posts');
+    if (isset($_SESSION['id']) and isset($_POST["text"]) and isset($_POST["cost"])) {
+        include_once("database.php");
+        $database = new Database();
+        $conn = $database->getConnection();
+        $id = $_SESSION["id"];
+        $text =  $_POST["text"];
+        $cost = $_POST["cost"];
+        include_once('order.php');
+        $order = new Order($id, $text, $cost);
+        Order::Publish($order);
+    }
+    else
+    {
+        fail('Invalid order');
+    }
     
 ?>

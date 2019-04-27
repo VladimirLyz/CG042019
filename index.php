@@ -1,5 +1,4 @@
 <?php
-    include_once "php/settings.php";
     session_start();
 
     if ($_SERVER["REQUEST_URI"] == "/") {
@@ -22,39 +21,30 @@
             //var_dump($Param);
         }
     }
-
-    if ($Page == "index" and $Module == "index") {
-        if (isset($_SESSION['username'])) {
-            header('Location: publication');
-        } else {
-            include("main.html");
-        }
-    } else {
-        switch ($Page) {
-            case "login":
-                include("login.php");
+    if ($Page == 'api')
+    {
+        switch ($Module)
+        {
+            case 'login':
+                include_once('php/authorize.php');
                 break;
-            case "logout":
-                include("php/logout.php");
+            case 'register':
+                include_once('php/add_user.php');
                 break;
-            case "register":
-                include("register.php");
+            case 'makeorder':
+                include_once('php/add_order.php');
                 break;
-            case "publication":
-                include("publication.php");
+            case 'getallorders':
+                include_once('php/get_orders.php');
                 break;
-            case "posts":
-                include("get_posts.php");
-                break;
-            case "user":
-                include_once("php/get_user.php");
-                $userPage = new UserPage();
-                $userPage->getUserPage($Module);
-                break;
-            default:
-                echo "404 Error: Page not found";
+            case 'logout':
+                include_once('php/logout.php');
                 break;
         }
-        
+    }
+    else
+    {
+        include_once('php/verdicts.php');
+        fail('Page is not found.');
     }
 ?>

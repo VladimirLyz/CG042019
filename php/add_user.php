@@ -5,13 +5,11 @@
 
     session_start();
     
-    include_once ('post.php');
+    //include_once ('post.php');
     if (isset($_POST["username"]) and isset($_POST["email"]) and isset($_POST["password"]))
     {
-        include_once "database.php";
+        include_once("database.php");
         $database = new Database(); 
-        
-        //var_dump($database);
         $conn = $database->getConnection();
         $user = $_POST["username"];
         $email = $_POST["email"];
@@ -25,7 +23,7 @@
             $_SESSION['message'] = 'Account with this email already exists.';
         }
         $sql = "INSERT INTO `users` (`username`, `email`, `password`, `client_voted`, `deliv_voted`)
-    VALUES ('$user', '$loweremail', '$password', 0, 0)";
+    VALUES ('$user', '$loweremail', '$password')";
         if ($conn->query($sql) === TRUE) {
             $req = "SELECT * FROM `users` WHERE `email`='$loweremail'";
             $result = mysqli_query($conn, $req) or fail(mysqli_error($conn));
